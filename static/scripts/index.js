@@ -216,8 +216,9 @@ function toggleWaypointsCursor(addWaypointsMode) {
     }
 }
 
-function removeWaypoint(latlng) {
+function removeWaypoint(marker) {
     // Remove the waypoint from the waypoints array
+    var latlng = marker.getLatLng();
     var index = waypoints.findIndex(function(waypoint) {
         return waypoint.lat === latlng.lat && waypoint.lng === latlng.lng;
     });
@@ -228,6 +229,19 @@ function removeWaypoint(latlng) {
         // Update the polyline to connect all waypoints after removal
         updatePolyline();
     }
+
+    $.ajax({
+        url: '/del_waypoint',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({lat: latlng.lat, lng: latlng.lng}),
+        success: function(result) {
+            console.log(result);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
 }
 
 function updateWaypoint(oldLatLng, newLatLng) {
@@ -265,19 +279,7 @@ function addWaypoint(latlng) {
                 text: 'Remove marker',
                 callback: function() {
                     map.removeLayer(marker);
-                    removeWaypoint(latlng);
-                    $.ajax({
-                        url: '/del_waypoint',
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({lat: latlng.lat, lng: latlng.lng}),
-                        success: function(result) {
-                            console.log(result);
-                        },
-                        error: function(error) {
-                            console.log(error);
-                        }
-                    });
+                    removeWaypoint(marker);
                 }
             }]
     }).addTo(map);
