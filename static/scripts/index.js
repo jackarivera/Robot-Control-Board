@@ -1,6 +1,9 @@
 var mode = 'moveAround'; // The current mode
 var def_ko_loaded = false;
 
+// Array for keepout zones
+var keepout_zones = []
+
 function toggleLoadDefKeepoutZones() {
     // Get a reference to the button element
     var button = document.getElementById('loadDefKeepoutZones');
@@ -9,11 +12,11 @@ function toggleLoadDefKeepoutZones() {
     if (def_ko_loaded) {
         def_ko_loaded = !def_ko_loaded;
         removeWaterKeepout();
-        button.innerText = 'Load Default Keepout Zones';
+        button.innerHTML = '<img src="/static/icons/up-arrow.png" class="icon" id="defKeepZoneIcon"/>Load Default Keepout Zones';
     } else {
         def_ko_loaded = !def_ko_loaded;
         drawWaterKeepout();
-        button.innerText = 'Unload Default Keepout Zones';
+        button.innerHTML = '<img src="/static/icons/down-arrow.png" class="icon" id="defKeepZoneIcon"/>Unload Default Keepout Zones';
     }
 }
 // Assign click handlers to the toolbar buttons
@@ -151,6 +154,7 @@ var robotIcon = L.icon({
     iconUrl: '/static/icons/gps_arrow_icon.png',
     iconSize: [24, 24],
 });
+
 var robotMarker = L.marker([44.96945, -93.5174], {icon: robotIcon, rotationAngle: 0}).addTo(map);
 robotMarker.bindPopup("<b>Robot Position:</b><br>Lat: " + robotMarker.getLatLng().lat + "<br>Lon: " + robotMarker.getLatLng().lng);
 
@@ -177,11 +181,21 @@ function drawWaterKeepout() {
             }).addTo(map);
         })
         .catch(error => console.log(error));
+
+    keepout_zones.push(defaultKeepoutZonesLayer);
 }
 
 function removeWaterKeepout() {
     if (defaultKeepoutZonesLayer) {
         map.removeLayer(defaultKeepoutZonesLayer);
+    }
+    
+    var index = keepout_zones.findIndex(function(zone) {
+        return defaultKeepoutZonesLayer;
+    });
+
+    if (index !== -1) {
+        keepout_zones.splice(index, 1);
     }
 }
 

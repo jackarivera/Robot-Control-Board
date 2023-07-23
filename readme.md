@@ -1,9 +1,9 @@
 ## Required Packages:
 
 Install via pip:
-``Flask, Folium, Pandas``
+``Flask, Folium, Pandas, opencv-python-headless``
 
-```pip install Flask folium pandas```
+```pip install Flask folium pandas opencv-python-headless```
 
 
 ## Usage

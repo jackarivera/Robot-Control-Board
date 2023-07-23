@@ -22,6 +22,7 @@
   touch-action: manipulation;
   vertical-align: middle;
   white-space: nowrap;
+  margin-top: 4px;
 }
 
 .button-3:focus:not(:focus-visible):not(.focus-visible) {
@@ -63,13 +64,6 @@
   border: 1px solid var(--input-border);
   background: var(--input-background);
   transition: border .3s ease;
-  &::placeholder {
-      color: var(--input-placeholder);
-  }
-  &:focus {
-      outline: none;
-      border-color: var(--input-border-focus);
-  }
 }
 
 :root {
@@ -100,66 +94,45 @@
   font-weight: 500;
   font-family: inherit;
   border-radius: 6px;
-  -webkit-appearance: none;
   color: var(--input-color);
   border: 1px solid var(--input-border);
   background: var(--input-background);
   transition: border .3s ease;
-  &::placeholder {
-      color: var(--input-placeholder);
-  }
-  &:focus {
-      outline: none;
-      border-color: var(--input-border-focus);
-  }
+  border-radius: 6px 0 0 6px;
 }
 
 .form-group {
   position: relative;
   display: flex;
   width: 100%;
-  & > span,
-  .form-field {
-      white-space: nowrap;
-      display: block;
-      &:not(:first-child):not(:last-child) {
-          border-radius: 0 6px 6px 0;
-      }
-      &:first-child {
-          border-radius: 6px 0 0 6px;
-      }
-      &:last-child {
-          border-radius: 0 6px 6px 0;
-      }
-      &:not(:first-child) {
-          margin-left: -1px;
-      }
-  }
-  .form-field {
-      position: relative;
-      z-index: 1;
-      flex: 1 1 auto;
-      width: 1%;
-      margin-top: 0;
-      margin-bottom: 0;
-  }
-  & > span {
-      text-align: center;
-      padding: 8px 12px;
-      font-size: 14px;
-      line-height: 25px;
-      color: var(--group-color);
-      background: var(--group-background);
-      border: 1px solid var(--group-border);
-      transition: background .3s ease, border .3s ease, color .3s ease;
-  }
-  &:focus-within {
-      & > span {
-          color: var(--group-color-focus);
-          background: var(--group-background-focus);
-          border-color: var(--group-border-focus);
-      }
-  }
+}
+.form-field {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  width: 1%;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-radius: 6px 0 0 6px;
+}
+
+.form-group > span {
+  text-align: center;
+  vertical-align: middle; /* Change 'center' to 'middle' for vertical alignment */
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 25px;
+  color: var(--group-color);
+  background: var(--group-background);
+  border: 1px solid var(--group-border);
+  transition: background .3s ease, border .3s ease, color .3s ease;
+  border-radius: 0 6px 6px 0;
+}
+
+.form-group:focus-within > span {
+  color: var(--group-color-focus);
+  background: var(--group-background-focus);
+  border-color: var(--group-border-focus);
 }
 
 html {
@@ -169,10 +142,6 @@ html {
 
 * {
   box-sizing: inherit;
-  &:before,
-  &:after {
-      box-sizing: inherit;
-  }
 }
 
 /* Define the styles for the toolbar */
@@ -182,6 +151,9 @@ html {
   margin-top: 20px;
 }
 .toolbar button {
+  display: inline-block; 
+  text-align: center;
+  vertical-align: middle;
   margin-right: 2px;
 }
 
@@ -190,14 +162,41 @@ html {
   margin-right: 0;
 }
 
+.icon_small {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle; 
+  margin-right: 10px;
+  filter: invert(1);
+}
+
 .icon {
   width: 25px;
   height: 25px;
   vertical-align: middle; 
   margin-right: 10px;
+  filter: invert(1);
 }
 
 /* Define a custom cursor for the "addWaypoints" mode */
 .add-waypoints-cursor {
   cursor: crosshair; /* Replace 'path/to/waypoint-cursor.png' with your custom cursor image path */
+}
+
+h2 a {
+  text-decoration: none;
+}
+
+#video-container {
+  margin-top: 10px;
+  width: 100%;
+  max-width: 640px; /* Adjust the width as per your requirement */
+  height: auto;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+}
+
+#video-stream {
+  width: 100%;
 }
