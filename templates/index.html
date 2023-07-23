@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rover Robotics OutdoorNav</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-contextmenu/1.4.0/leaflet.contextmenu.min.css" />
+    <link rel="stylesheet" href="/static/styles/main_style.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-contextmenu/1.4.0/leaflet.contextmenu.min.js"></script>
+    <script src="/static/scripts/leaflet.rotatedMarker.js"></script>
+</head>
+<body>
+    <h2><img src="/static/icons/rover_logo.png" height="39px" width="110px" alt="rover_logo" style="vertical-align: middle; margin-right: 10px;"/>Outdoor Navigation Software</h2>
+    
+    <div class="toolbar">
+        <button class="button-3" style="background-color: #707070;" id="switchView"><img src="/static/icons/switch_icon.png" class="icon"/>Switch View</button>
+        <button class="button-3" style="background-color: #707070;" id="moveAround"><img src="/static/icons/move_icon.png" class="icon"/>Move Around</button>
+        <button class="button-3" id="addWaypoints"><img src="/static/icons/waypoint_icon.png" class="icon"/>Add Waypoints</button>
+        <button class="button-3" style="background-color: #ff0000;" id="clearWaypoints"><img src="/static/icons/trash_icon.png" class="icon"/>Clear Waypoints</button>
+        <button class="button-3" style="background-color: #ffc400;" id="addKeepoutZones" disabled><img src="/static/icons/restricted_icon.png" class="icon"/>Add Keepout Zones</button>
+        <button class="button-3" style="background-color: #ffc400;" id="loadDefKeepoutZones">Load Default Keepout Zones</button>
+    </div>
+    <div id="map" style="height: 500px;"></div>
+    <div class="toolbar">
+        <div class="form-group">
+            <input id="waypointsFilename" class="form-field" placeholder="waypoints_file_name">
+            <span>.csv</span>
+            <button class="button-3" style="background-color: #0084ff; margin-left: 4px;" id="export">Export Waypoints to CSV</button>
+        </div>
+        <div class="form-group">
+            <input id="saveMissionFilename" class="form-field" placeholder="mission_file_name" >
+            <span>.json</span>
+            <button class="button-3" style="background-color: #0084ff; margin-left: 4px;" id="saveMission" >Save Mission</button>
+        </div>
+        <div class="form-group">
+            <input id="loadMissionFilename" class="form-field" placeholder="mission_file_name">
+            <span>.json</span>
+            <button class="button-3" style="background-color: #0084ff; margin-left: 4px;" id="loadMission">Load Mission</button>
+        </div>
+    </div>
+    <script src="/static/scripts/index.js"></script>
+</body>
+</html>
