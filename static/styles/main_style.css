@@ -200,3 +200,29 @@ h2 a {
 #video-stream {
   width: 100%;
 }
+
+#consoleLog {
+  font-family: monospace;
+  height: 300px;
+  width: 100%;
+  padding: 10px;
+  overflow-y: auto;
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+.log-error {
+  color: #FF0000;
+}
+
+.log-warn {
+  color: #FFA500;
+}
+
+.log-info {
+  color: #FFFFFF;
+}
+
+.log-success {
+  color:#00cc11;
+}

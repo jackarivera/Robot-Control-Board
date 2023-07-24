@@ -45,7 +45,6 @@
             <button class="button-3" style="background-color: #0084ff; margin-left: 4px; margin-right: 4px;" id="loadMission">Load Mission</button>
         </div>
     </div>
-    <script src="/static/scripts/index.js"></script>
 
     <div style="display: flex; justify-content: space-between;">
         <div>
@@ -62,11 +61,10 @@
             <button class="button-3" style="background-color: #ff0000;" id="abortMission"><img src="/static/icons/stop-sign.png" class="icon_small"/>Abort Mission</button>
             
             <h2>Logging:</h2>
-            <textarea rows="20" cols="75" style="resize: none;">Logging text here...</textarea>
+            <div id="consoleLog"></div>
         </div>
-    </div>
-    
-    
-
+    </div>    
+    <script src="/static/scripts/console_log.js"></script>
+    <script src="/static/scripts/index.js"></script>
 </body>
 </html>

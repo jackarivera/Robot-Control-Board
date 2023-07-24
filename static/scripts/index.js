@@ -1,8 +1,11 @@
 var mode = 'moveAround'; // The current mode
 var def_ko_loaded = false;
+// Initialize an empty array to hold the coordinates of the waypoints
+var waypoints = [];
+var wp_markers = [];
 
 // Array for keepout zones
-var keepout_zones = []
+var keepout_zones = [];
 
 function toggleLoadDefKeepoutZones() {
     // Get a reference to the button element
@@ -42,52 +45,56 @@ $('#loadDefKeepoutZones').click(function() {
     toggleLoadDefKeepoutZones();
 });
 $('#saveMission').click(function() {
-    // TODO: Implement Functionality
     var missionFilename = $('#saveMissionFilename').val().trim(); // Get the input value and remove leading/trailing spaces
-
-    // Check if missionFilename is empty or only contains spaces
     if (missionFilename === '') {
-        // Handle the case when the input is empty
-        console.log('Mission filename is empty.');
+        addLog('Mission filename is empty.', 'error');
         $('#saveMissionFilename').css('border-color', 'red');
         return;
     }
+
     $.ajax({
         url: '/save_mission',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({"file_name": missionFilename}),
         success: function(result) {
-            console.log(result);
+            addLog(result, 'success', 'MISSION');
             $('#saveMissionFilename').css('border-color', '');
         },
         error: function(error) {
-            console.log(error);
+            addLog(result, 'error', 'MISSION');
             $('#saveMissionFilename').css('border-color', 'red');
         }
     });
 });
 $('#loadMission').click(function() {
-    // TODO: Implement Functionality
     var missionFilename = $('#loadMissionFilename').val().trim(); // Get the input value and remove leading/trailing spaces
-
-    // Check if missionFilename is empty or only contains spaces
     if (missionFilename === '') {
-        // Handle the case when the input is empty
         console.log('Mission filename is empty.');
         $('#loadMissionFilename').css('border-color', 'red');
         return;
     }
-
-    // Continue with the AJAX request
     $.ajax({
         url: '/load_mission',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({"file_name": missionFilename}),
-        success: function(result) {
-            console.log(result);
+        success: function(response) {
             $('#loadMissionFilename').css('border-color', '');
+            clearWaypoints(); // Clear old waypoints first
+
+            var loadedWaypoints = response.coordinates;
+            // Add the robot's current position as the first waypoint
+            waypoints = [robotMarker.getLatLng()]
+            // Add the loaded waypoints to the map and waypoints array
+            for (var i = 0; i < loadedWaypoints.length; i++) {
+                let new_wp = {
+                    lat: loadedWaypoints[i][0],
+                    lng: loadedWaypoints[i][1]
+                };
+                addWaypoint(new_wp);
+            }
+            updatePolyline();
         },
         error: function(error) {
             console.log(error);
@@ -157,6 +164,7 @@ var robotIcon = L.icon({
 
 var robotMarker = L.marker([44.96945, -93.5174], {icon: robotIcon, rotationAngle: 0}).addTo(map);
 robotMarker.bindPopup("<b>Robot Position:</b><br>Lat: " + robotMarker.getLatLng().lat + "<br>Lon: " + robotMarker.getLatLng().lng);
+waypoints.push(robotMarker.getLatLng());
 
 map.on('click', function(e) {
     if (mode === 'addWaypoints') {
@@ -199,9 +207,7 @@ function removeWaterKeepout() {
     }
 }
 
-// Initialize an empty array to hold the coordinates of the waypoints
-var waypoints = [robotMarker.getLatLng()];
-var wp_markers = []
+
 
 // Initialize an empty Leaflet Polyline object
 var polyline = L.polyline([], { color: 'blue' }).addTo(map);
@@ -242,6 +248,7 @@ function removeWaypoint(marker) {
             console.log(error);
         }
     });
+    addLog("Removed Waypoint: [" + latlng.lat + ", " + latlng.lng + "]", 'info');
 }
 
 function updateWaypoint(oldLatLng, newLatLng) {
@@ -269,9 +276,11 @@ function updateWaypoint(oldLatLng, newLatLng) {
                 console.log(error);
             }
     });
+    addLog("Updated Waypoint: [" + oldLatLng.lat + ", " + oldLatLng.lng + "] -> [" + newLatLng.lat + ", " + newLatLng.lng + "]", 'info');
 }
 
 function addWaypoint(latlng) {
+    console.log(latlng);
     var marker = L.marker(latlng, {
             draggable: true,
             contextmenu: true,
@@ -314,6 +323,7 @@ function addWaypoint(latlng) {
                 console.log(error);
             }
     });
+    addLog("Added Waypoint: [" + latlng.lat + ", " + latlng.lng + "]", 'info');
 }
 
 function clearWaypoints() {
