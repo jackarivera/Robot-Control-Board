@@ -12,58 +12,63 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.min.js"></script>
 </head>
 <body>
-    <h2>
+    <h3 style="margin-bottom: 5px;">
         <a href="https://www.roverrobotics.com" target="_blank">
             <img src="/static/icons/rover_logo.png" height="39px" width="110px" alt="rover_logo" style="vertical-align: middle; margin-right: 10px;"/>
         </a>
         Outdoor Navigation Software
-    </h2>
-    
-    <div class="toolbar">
-        <button class="button-3" style="background-color: #707070;" id="switchView"><img src="/static/icons/switch.png" class="icon"/>Switch View</button>
-        <button class="button-3" style="background-color: #707070;" id="moveAround"><img src="/static/icons/move.png" class="icon"/>Move Around</button>
-        <button class="button-3" id="addWaypoints"><img src="/static/icons/way.png" class="icon"/>Add Waypoints</button>
-        <button class="button-3" style="background-color: #ff0000;" id="clearWaypoints"><img src="/static/icons/broom.png" class="icon"/>Clear Waypoints</button>
-        <button class="button-3" style="background-color: #ffc400;" id="addKeepoutZones" disabled><img src="/static/icons/restricted-area.png" class="icon"/>Add Keepout Zones</button>
-        <button class="button-3" style="background-color: #ffc400;" id="loadDefKeepoutZones"><img src="/static/icons/up-arrow.png" class="icon" id="defKeepZoneIcon"/>Load Default Keepout Zones</button>
-    </div>
-    <div id="map" style="height: 500px;"></div>
-    <div class="toolbar">
-        <div class="form-group">
-            <input id="waypointsFilename" class="form-field" placeholder="waypoints_file_name">
-            <span>.csv</span>
-            <button class="button-3" style="background-color: #0084ff; margin-left: 4px; margin-right: 4px;" id="export">Export Waypoints to CSV</button>
+    </h3>
+    <div class="main-content">
+        <div class="toolbar">
+            <button class="button-3" style="background-color: #707070;" id="switchView"><img src="/static/icons/switch.png" class="icon"/>Switch View</button>
+            <button class="button-3" style="background-color: #707070;" id="moveAround"><img src="/static/icons/move.png" class="icon"/>Move Around</button>
+            <button class="button-3" id="addWaypoints"><img src="/static/icons/way.png" class="icon"/>Add Waypoints</button>
+            <button class="button-3" style="background-color: #ff0000;" id="clearWaypoints"><img src="/static/icons/broom.png" class="icon"/>Clear Waypoints</button>
+            <button class="button-3" style="background-color: #ffc400;" id="addKeepoutZones" disabled><img src="/static/icons/restricted-area.png" class="icon"/>Add Keepout Zones</button>
+            <button class="button-3" style="background-color: #ffc400;" id="loadDefKeepoutZones"><img src="/static/icons/up-arrow.png" class="icon" id="defKeepZoneIcon"/>Load Default Keepout Zones</button>
         </div>
-        <div class="form-group">
-            <input id="saveMissionFilename" class="form-field" placeholder="mission_file_name" >
-            <span>.json</span>
-            <button class="button-3" style="background-color: #0084ff; margin-left: 4px; margin-right: 4px;" id="saveMission" >Save Mission</button>
+        <div id="map" class="map" style="height: 500px;"></div>
+        <div class="toolbar" style="margin-bottom: 5px">
+            <div class="form-group">
+                <input id="waypointsFilename" class="form-field" placeholder="waypoints_file_name">
+                <span>.csv</span>
+                <button class="button-3" style="background-color: #0084ff; margin-left: 4px; margin-right: 4px;" id="export">Export Waypoints to CSV</button>
+            </div>
+            <div class="form-group">
+                <input id="saveMissionFilename" class="form-field" placeholder="mission_file_name" >
+                <span>.json</span>
+                <button class="button-3" style="background-color: #0084ff; margin-left: 4px; margin-right: 4px;" id="saveMission" >Save Mission</button>
+            </div>
+            <div class="form-group">
+                <input id="loadMissionFilename" class="form-field" placeholder="mission_file_name">
+                <span>.json</span>
+                <button class="button-3" style="background-color: #0084ff; margin-left: 4px; margin-right: 4px;" id="loadMission">Load Mission</button>
+            </div>
         </div>
-        <div class="form-group">
-            <input id="loadMissionFilename" class="form-field" placeholder="mission_file_name">
-            <span>.json</span>
-            <button class="button-3" style="background-color: #0084ff; margin-left: 4px; margin-right: 4px;" id="loadMission">Load Mission</button>
-        </div>
-    </div>
 
-    <div style="display: flex; justify-content: space-between;">
-        <div>
-            <h2>Robot Stream:</h2>
-            <img src="http://10.0.0.172:8080/video_feed" />
+        <div class="flex-container">
+            <div>
+                <h3 style="margin-bottom: 5px">Robot Stream:</h3>
+                <img src="http://10.0.0.172:8080/video_feed" class="dynamic-image"/>
+            </div>
+        
+            <div style="margin-left: 4px;">
+                <div>
+                    <h3 style="margin-bottom: 5px">Control Board:</h3>
+                    <button class="button-3" style="background-color: #707070;" id="restartServices"><img src="/static/icons/restart.png" class="icon_small"/>Restart Services</button>
+                    <button class="button-3" style="background-color: #707070;" id="startNav"><img src="/static/icons/navigate.png" class="icon_small"/>Bringup Navigation</button>
+                    <button class="button-3" style="background-color: #707070;" id="startLocalize"><img src="/static/icons/localize.png" class="icon_small"/>Start Localization</button>
+                    <button class="button-3" id="runMission"><img src="/static/icons/running.png" class="icon_small"/>Run Mission</button>
+                    <button class="button-3" style="background-color: #ff0000;" id="abortMission"><img src="/static/icons/stop-sign.png" class="icon_small"/>Abort Mission</button>
+                </div>
+                <div>
+                    <h3>Logging:</h3>
+                    <div id="consoleLog" class="log-container"></div>
+                </div>
+            </div>
         </div>
-    
-        <div style="margin-left: 4px;">
-            <h2>Control Board:</h2>
-            <button class="button-3" style="background-color: #707070;" id="restartServices"><img src="/static/icons/restart.png" class="icon_small"/>Restart Services</button>
-            <button class="button-3" style="background-color: #707070;" id="startNav"><img src="/static/icons/navigate.png" class="icon_small"/>Bringup Navigation</button>
-            <button class="button-3" style="background-color: #707070;" id="startLocalize"><img src="/static/icons/localize.png" class="icon_small"/>Start Localization</button>
-            <button class="button-3" id="runMission"><img src="/static/icons/running.png" class="icon_small"/>Run Mission</button>
-            <button class="button-3" style="background-color: #ff0000;" id="abortMission"><img src="/static/icons/stop-sign.png" class="icon_small"/>Abort Mission</button>
-            
-            <h2>Logging:</h2>
-            <div id="consoleLog"></div>
-        </div>
-    </div>    
+        
+    </div>      
     <script src="/static/scripts/console_log.js"></script>
     <script src="/static/scripts/index.js"></script>
 </body>

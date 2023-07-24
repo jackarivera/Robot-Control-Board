@@ -347,7 +347,7 @@ function clearWaypoints() {
                 console.log(error);
             }
     });
-
+    addLog("Cleared all Waypoints.", 'info');
 }
 
 // Function to update the polyline based on the waypoints array

@@ -148,7 +148,7 @@ html {
 .toolbar {
   display: flex;
   margin-bottom: 20px;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 .toolbar button {
   display: inline-block; 
@@ -183,7 +183,7 @@ html {
   cursor: crosshair; /* Replace 'path/to/waypoint-cursor.png' with your custom cursor image path */
 }
 
-h2 a {
+h3 a {
   text-decoration: none;
 }
 
@@ -225,4 +225,41 @@ h2 a {
 
 .log-success {
   color:#00cc11;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  height: 92vh; /* Adjust as needed */
+  overflow: auto;
+}
+
+.map {
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-height: 30vh; /* Adjust as needed */
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: auto;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.log-container {
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: auto;
+  object-fit: contain;
+  max-height: 15vh; /* Adjust as needed */
+}
+
+.dynamic-image {
+  height: 30vh; /* Adjust as needed */
+  width: auto; /* Maintain aspect ratio */
+  object-fit: contain; /* The image will not get cropped and maintains its aspect ratio */
 }
