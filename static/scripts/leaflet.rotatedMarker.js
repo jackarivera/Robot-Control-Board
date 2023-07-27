@@ -43,7 +43,7 @@
         },
 
         setRotationAngle: function(angle) {
-            this.options.rotationAngle = angle;
+            this.options.rotationAngle = -angle;
             this.update();
             return this;
         },

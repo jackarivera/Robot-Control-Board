@@ -4,6 +4,46 @@ import folium
 import pandas as pd
 import os
 import json
+from queue import Queue
+import threading
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import NavSatFix, Imu
+from pyquaternion import Quaternion
+
+
+gps_queue = Queue()
+imu_queue = Queue()
+
+class SimpleNode(Node):
+    def __init__(self):
+        super().__init__("webserver_node")
+        self.gps_subscriber = self.create_subscription(
+            NavSatFix, "/gps/filtered", self.gps_callback, 10)
+        self.imu_subscriber = self.create_subscription(
+            Imu, "/imu/data", self.imu_callback, 10)
+
+    def gps_callback(self, msg):
+        gps_queue.put((msg.latitude, msg.longitude))
+
+    def imu_callback(self, msg):
+        orientation_q = msg.orientation
+        quaternion = Quaternion(orientation_q.w, orientation_q.x, orientation_q.y, orientation_q.z)
+        euler = quaternion.degrees
+        yaw = euler[2]  # Assuming you want the yaw angle
+        imu_queue.put(yaw)
+
+
+def ros_spin(node):
+    rclpy.spin(node)
+
+
+rclpy.init(args=None)
+node = SimpleNode()
+ros_thread = threading.Thread(target=ros_spin, args=(node,))
+ros_thread.start()
+
+    
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 coordinates = []
@@ -119,6 +159,12 @@ def load_mission():
 @socketio.on('connect')
 def handle_connect():
     log("Client Connected", 'info', 'Socket')
+    while not gps_queue.empty():
+        lat, lng = gps_queue.get()
+        socketio.emit('gps_data', {'lat': lat, 'lng': lng})
+    while not imu_queue.empty():
+        rotation = imu_queue.get()
+        socketio.emit('imu_data', {'rotation': rotation})
 
 @socketio.on('disconnect')
 def handle_disconnect():
@@ -128,5 +174,7 @@ def handle_disconnect():
 def log(msg, level='info', prefix=None):
     socketio.emit('log', {'msg': msg, 'level': level, 'prefix': prefix})
 
+
+
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5000, debug=False)

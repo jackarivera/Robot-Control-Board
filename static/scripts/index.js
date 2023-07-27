@@ -165,6 +165,7 @@ var robotIcon = L.icon({
 var robotMarker = L.marker([44.96945, -93.5174], {icon: robotIcon, rotationAngle: 0}).addTo(map);
 robotMarker.bindPopup("<b>Robot Position:</b><br>Lat: " + robotMarker.getLatLng().lat + "<br>Lon: " + robotMarker.getLatLng().lng);
 waypoints.push(robotMarker.getLatLng());
+setRobotPosition(44.969560624494676, -93.5171673638741, 180);
 
 map.on('click', function(e) {
     if (mode === 'addWaypoints') {
@@ -355,9 +356,30 @@ function updatePolyline() {
     polyline.setLatLngs(waypoints);
 }
 
-function updateRobotPosition() {
+function setRobotPosition(lat, lng, rot) {
     r_pos = robotMarker.getLatLng();
-    robotMarker.setLatLng([r_pos.lat + 0.0001, r_pos.lng + 0.0001]);
+    robotMarker.setLatLng([lat, lng]);
+    robotMarker.setRotationAngle(rot);
+    robotMarker.bindPopup("<b>Robot Position:</b><br>Lat: " + robotMarker.getLatLng().lat + "<br>Lon: " + robotMarker.getLatLng().lng + "<br>Heading: " + rot);
     waypoints.splice(0, 1);
     waypoints.unshift(robotMarker.getLatLng());
+}
+
+socket.on('gps_data', (data) => {
+    handleGpsData(data.lat, data.lng);
+});
+
+socket.on('imu_data', (data) => {
+    handleImuData(data.rotation);
+});
+
+function handleGpsData(lat, lng) {
+    addLog(`GPS Data Received. Latitude: ${lat}, Longitude: ${lng}`, 'info', 'GPS');
+    setRobotPosition(lat, lng, robotMarker.getRotationAngle());
+}
+
+function handleImuData(rotation) {
+    adjusted_rot = rotation + 60.0;
+    addLog(`IMU Data Received. Rotation: ${adjusted_rot}`, 'info', 'GPS');
+    setRobotPosition(robotMarker.getLatLng().lat, robotMarker.getLatLng().lng, adjusted_rot);
 }
