@@ -11,7 +11,7 @@ from rclpy.node import Node
 from sensor_msgs.msg import NavSatFix, Imu
 from pyquaternion import Quaternion
 import time
-
+import numpy as np
 
 gps_queue = Queue()
 imu_queue = Queue()
@@ -23,16 +23,40 @@ class SimpleNode(Node):
             NavSatFix, "/gps/filtered", self.gps_callback, 10)
         self.imu_subscriber = self.create_subscription(
             Imu, "/imu/data", self.imu_callback, 10)
+        self.offset = -90
+        self.previous_yaw = 0
 
     def gps_callback(self, msg):
         gps_queue.put((msg.latitude, msg.longitude))
 
     def imu_callback(self, msg):
         orientation_q = msg.orientation
-        quaternion = Quaternion(orientation_q.w, orientation_q.x, orientation_q.y, orientation_q.z)
-        euler = quaternion.degrees
-        yaw = euler  # Assuming you want the yaw angle
-        imu_queue.put(yaw)
+        quaternion = Quaternion(orientation_q.w, orientation_q.x, orientation_q.y, orientation_q.z).yaw_pitch_roll
+        yaw, pitch, roll = quaternion
+        yaw_d, pitch_d, roll_d = map(np.degrees, [yaw, pitch, roll])
+        adjusted_yaw_d = self.adjust_angles(yaw_d)
+        smoothed_yaw_d = self.smooth_yaw(adjusted_yaw_d)
+        imu_queue.put(smoothed_yaw_d)
+
+    def adjust_angles(self, angle):
+        """Adjusts angles from [-180, 180] to [0, 360]."""
+        angle += self.offset
+        if angle < 0:
+            angle += 360
+        elif angle > 360:
+            angle -= 360
+        return angle
+
+    def smooth_yaw(self, yaw):
+        """Avoids jumps in yaw value."""
+        diff = yaw - self.previous_yaw
+        if abs(diff) > 180:
+            if diff > 0:
+                yaw -= 360
+            else:
+                yaw += 360
+        self.previous_yaw = yaw
+        return yaw
 
 
 def ros_spin(node):
