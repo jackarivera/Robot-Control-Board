@@ -31,7 +31,7 @@ class SimpleNode(Node):
         orientation_q = msg.orientation
         quaternion = Quaternion(orientation_q.w, orientation_q.x, orientation_q.y, orientation_q.z)
         euler = quaternion.degrees
-        yaw = euler[2]  # Assuming you want the yaw angle
+        yaw = euler  # Assuming you want the yaw angle
         imu_queue.put(yaw)
 
 
