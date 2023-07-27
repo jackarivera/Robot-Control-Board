@@ -379,7 +379,7 @@ function handleGpsData(lat, lng) {
 }
 
 function handleImuData(rotation) {
-    adjusted_rot = rotation + 60.0;
+    adjusted_rot = rotation;
     addLog(`IMU Data Received. Rotation: ${adjusted_rot}`, 'info', 'GPS');
     setRobotPosition(robotMarker.getLatLng().lat, robotMarker.getLatLng().lng, adjusted_rot);
 }
