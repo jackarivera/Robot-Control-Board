@@ -10,6 +10,7 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import NavSatFix, Imu
 from pyquaternion import Quaternion
+import time
 
 
 gps_queue = Queue()
@@ -43,7 +44,18 @@ node = SimpleNode()
 ros_thread = threading.Thread(target=ros_spin, args=(node,))
 ros_thread.start()
 
-    
+def send_data_to_client():
+    while True:
+        while not gps_queue.empty():
+            lat, lng = gps_queue.get()
+            socketio.emit('gps_data', {'lat': lat, 'lng': lng})
+        while not imu_queue.empty():
+            rotation = imu_queue.get()
+            socketio.emit('imu_data', {'rotation': rotation})
+        time.sleep(0.1)  # adjust the sleep time as needed
+
+send_thread = threading.Thread(target=send_data_to_client, daemon=True)
+send_thread.start()
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 coordinates = []
