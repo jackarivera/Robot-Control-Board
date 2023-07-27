@@ -23,7 +23,7 @@ class SimpleNode(Node):
             NavSatFix, "/gps/filtered", self.gps_callback, 10)
         self.imu_subscriber = self.create_subscription(
             Imu, "/imu/data", self.imu_callback, 10)
-        self.offset = -90
+        self.offset = 90
         self.previous_yaw = 0
 
     def gps_callback(self, msg):
