@@ -363,6 +363,7 @@ function setRobotPosition(lat, lng, rot) {
     robotMarker.bindPopup("<b>Robot Position:</b><br>Lat: " + robotMarker.getLatLng().lat + "<br>Lon: " + robotMarker.getLatLng().lng + "<br>Heading: " + rot);
     waypoints.splice(0, 1);
     waypoints.unshift(robotMarker.getLatLng());
+    
 }
 
 socket.on('gps_data', (data) => {
@@ -376,6 +377,7 @@ socket.on('imu_data', (data) => {
 function handleGpsData(lat, lng) {
     addLog(`GPS Data Received. Latitude: ${lat}, Longitude: ${lng}`, 'info', 'GPS');
     setRobotPosition(lat, lng, robotMarker.getRotationAngle());
+    updatePolyline();
 }
 
 function handleImuData(rotation) {
