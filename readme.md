@@ -1,9 +1,11 @@
+Open source outdoor navigation dashboard. Not all features are implemented but it provides a nice starting point for navigation dashboards allowing you to plot waypoints and save missions. 
+
 ## Required Packages:
 
 Install via pip:
 ``Flask, Folium, Pandas, opencv-python-headless``
 
-```pip install Flask folium pandas opencv-python-headless```
+```pip install Flask folium pandas opencv-python-headless flask_socketio```
 
 
 ## Usage
